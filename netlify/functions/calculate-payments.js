@@ -1,6 +1,6 @@
 
 exports.handler = async function(event) {
-  const AUTH_KEY = "sk_live_2d9e3e447bf34984ba1e3e2f";
+  const AUTH_KEY = "EMS_Key_9205643ef502";
   const providedKey = event.headers["x-api-key"];
 
   if (providedKey !== AUTH_KEY) {
