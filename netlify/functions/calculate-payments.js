@@ -1,6 +1,6 @@
 
 exports.handler = async function(event) {
-  const AUTH_KEY = "ems-key-9205643ef502";
+  const AUTH_KEY = "ems-key-77a8655";
   const providedKey = event.headers["x-api-key"];
 
   if (providedKey !== AUTH_KEY) {
@@ -12,15 +12,20 @@ exports.handler = async function(event) {
 
   try {
     const input = JSON.parse(event.body);
-    const { invoiceAmount, endDate, preferredPaymentDate } = input;
+    const invoiceAmount = Number(input.invoiceAmount);
+    const endDateObj = new Date(input.endDate);
+    const preferredPaymentDate = parseInt(input.preferredPaymentDate, 10);
 
-    if (invoiceAmount <= 0) {
-      return responseWithError("Invoice amount must be greater than 0", invoiceAmount);
+    if (isNaN(invoiceAmount) || invoiceAmount <= 0) {
+      return responseWithError("Invoice amount must be a positive number", invoiceAmount);
     }
 
-    const endDateObj = new Date(endDate);
     if (isNaN(endDateObj.getTime())) {
       return responseWithError("Invalid end date", invoiceAmount);
+    }
+
+    if (![1, 15].includes(preferredPaymentDate)) {
+      return responseWithError("Preferred payment day must be 1 or 15", invoiceAmount);
     }
 
     const today = new Date();
