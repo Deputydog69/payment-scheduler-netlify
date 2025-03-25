@@ -1,5 +1,15 @@
 
 exports.handler = async function(event) {
+  const AUTH_KEY = "sk_live_2d9e3e447bf34984ba1e3e2f";
+  const providedKey = event.headers["x-api-key"];
+
+  if (providedKey !== AUTH_KEY) {
+    return {
+      statusCode: 401,
+      body: JSON.stringify({ error: "Unauthorized" })
+    };
+  }
+
   try {
     const input = JSON.parse(event.body);
     const { invoiceAmount, endDate, preferredPaymentDate } = input;
